@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <!--  -->
+</head>
+<body>
+<script>
+  // window.onload = function () {
+  //   var length = 88;
+  //
+  //   function test() {
+  //     console.log(this)
+  //     console.log(this.length)
+  //   }
+  //
+  //   var obj = {
+  //     length: 99,
+  //     action: function (test) {
+  //       test(); // 88
+  //       arguments[0]()// 99
+  //     }
+  //   }
+  //   obj.action(test, [1, 2, 3])
+  // }
+
+  // var length = undefined
+  // function test
+
+
+  var a = 10;
+
+  function test() {
+    console.log(a); // undefined
+    a = 100;
+    console.log(this.a);//10
+    var a;
+    console.log(a) // 100
+  }
+
+  test()
+</script>
+<script>
+  
+</script>
+</body>
+</html>
