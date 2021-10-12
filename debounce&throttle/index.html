@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    #box {
+      width: 200px;
+      height: 200px;
+      background-color: yellow;
+    }
+  </style>
+</head>
+<body>
+<div id="box" draggable="true"></div>
+<script>
+  window.onload = function () {
+    function debounce(fn, delay) {
+      let timer = null
+      return function () {
+        if (timer) {
+          clearTimeout(timer)
+        }
+        timer = setTimeout(() => {
+          fn.apply(this, arguments)
+          timer = null;
+        }, delay)
+      }
+    }
+
+    function throttle(fn, delay = 1000) {
+      let timer = null;
+      return function () {
+        if (timer) {
+          return
+        }
+        timer = setTimeout(() => {
+          fn.apply(this, arguments)
+          timer = null;
+        }, delay)
+      }
+    }
+
+    let boxDom = document.querySelector('#box');
+
+    function dragFn() {
+      console.log('box正在被拖动', arguments);
+    }
+
+    // let fn = debounce(dragFn, 500)
+    let fn = throttle(dragFn, 1000)
+    boxDom.addEventListener('drag', () => fn(2, 3, 4))
+  }
+</script>
+</body>
+</html>
