@@ -1,9 +1,7 @@
 function shallowCopy(obj) {
   let target = {}
   for (const key in obj) {
-    if (obj.hasOwnProperty) {
-      target[key] = obj[key]
-    }
+    target[key] = obj[key]
   }
   return target
 }
@@ -34,7 +32,7 @@ let obj = {
   }
 }
 
-let cloneObj = deepClone(obj)
+let cloneObj = shallowCopy(obj)
 cloneObj.a = 'a'
 cloneObj.b.a = 'b'
 cloneObj.b.c.a = 2
