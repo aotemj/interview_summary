@@ -42,40 +42,49 @@ class MyPromise {
     }
   }
 
-  then(onFulfilled = value => value, onRejected = value => value) {
-    return new MyPromise((resolve, reject) => {
+  unify(instance, result, resolve, reject) {
+    if (instance === result) {
+      throw new TypeError("Chaining cycle detected for promise")
+    }
+    try {
+      if (result instanceof MyPromise) {
+        result.then(resolve, reject)
+      } else {
+        resolve(result)
+      }
+    } catch (e) {
+      reject(e)
+    }
+  }
+
+  then(onFulfilled, onRejected) {
+    if (typeof onFulfilled !== 'function') {
+      onFulfilled = () => this.value
+    }
+    if (typeof onRejected !== 'function') {
+      onRejected = () => this.value
+    }
+
+    const newPromise = new MyPromise((resolve, reject) => {
       if (this.status === MyPromise.PENDING) {
         this.callbacks.push({
-          onFulfilled,
-          onRejected,
+          onFulfilled: () => {
+            this.unify(newPromise, onFulfilled(this.value), resolve, reject)
+          },
+          onRejected: () => {
+            this.unify(newPromise, onRejected(this.value), resolve, reject)
+          },
         })
       } else if (this.status === MyPromise.FULFILLED) {
         setTimeout(() => {
-          try {
-            const res = onFulfilled(this.value)
-            // console.log(res);
-            if (res instanceof MyPromise) {
-              res.then((res) => {
-                resolve(res)
-              })
-            } else {
-              resolve(res)
-            }
-          } catch (e) {
-            reject(e)
-          }
-
+          this.unify(newPromise, onFulfilled(this.value), resolve, reject)
         })
       } else {
         setTimeout(() => {
-          try {
-            const res = onRejected(this.value)
-            reject(res)
-          } catch (e) {
-            reject(e)
-          }
+          this.unify(newPromise, onRejected(this.value), resolve, reject)
         })
       }
     })
+    return newPromise
   }
 }
