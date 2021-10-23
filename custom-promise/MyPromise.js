@@ -103,4 +103,32 @@ class MyPromise {
       reject(value)
     })
   }
+
+  static all(promises) {
+    const length = promises.length
+    let values = []
+
+
+    return new MyPromise((resolve, reject) => {
+      function checkFulfilled(res) {
+        values.push(res)
+        if (values.length === length) {
+          resolve(values)
+        }
+      }
+
+      promises.forEach((promise) => {
+        console.log(promise);
+        if (promise instanceof MyPromise) {
+          promise.then(res => {
+            checkFulfilled(res)
+          }, reason => {
+            reject(reason)
+          })
+        } else {
+          checkFulfilled(promise)
+        }
+      })
+    })
+  }
 }
