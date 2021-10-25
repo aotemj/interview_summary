@@ -131,4 +131,40 @@ class MyPromise {
       })
     })
   }
+
+  static race(promises) {
+    return new MyPromise((resolve, reject) => {
+      promises.forEach(promise => {
+        if (promise instanceof MyPromise) {
+          promise.then(res => {
+            resolve(res)
+          }, (res) => {
+            reject(res)
+          })
+        } else {
+          resolve(promise)
+        }
+      })
+    })
+  }
+
+  static allSettled(promises) {
+    let results = []
+    const length = promises.length
+    return new MyPromise((resolve, reject) => {
+      promises.forEach(promise => {
+        promise.then((res) => {
+          results.push({status: 'fulfilled', value: res})
+          if (length === results.length) {
+            resolve(results)
+          }
+        }, (reason) => {
+          results.push({status: 'rejected', value: reason})
+          if (length === results.length) {
+            resolve(results)
+          }
+        })
+      })
+    })
+  }
 }
