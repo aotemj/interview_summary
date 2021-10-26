@@ -13,7 +13,14 @@ function flatArray(arr) {
   return res
 }
 
+// method2 use reduce
+function flatArray2(arr) {
+  return arr.reduce((res, prev) => {
+    return res.concat(Array.isArray(prev) ? flatArray2(prev) : prev)
+  }, [])
+}
+
 let arr = [1, [1, 2, 3, [4, 5, 6], 7, [8, [9]]]]
 
-let newArr = flatArray(arr)
+let newArr = flatArray2(arr)
 console.log(newArr);
