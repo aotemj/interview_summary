@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    #box {
+      height: 500px;
+      width: 100px;
+      background-color: pink;
+      padding-top: 9px;
+      margin-top: 24px;
+      border-top: 12px solid red;
+      overflow: auto;
+      box-sizing: border-box;
+    }
+
+    #inner-box {
+      height: 1500px;
+      background-color: yellow;
+      padding-top: 18px;
+      margin-top: 22px;
+      border-top: 1px solid blue;
+    }
+  </style>
+</head>
+<body>
+<div id="box">
+  <div id="inner-box"></div>
+</div>
+<script>
+  let boxDom = document.querySelector("#box")
+  boxDom.addEventListener("scroll", () => {
+    console.log('boxDom.clientHeight', boxDom.clientHeight);
+    console.log('boxDom.offsetHeight', boxDom.offsetHeight);
+    console.log('boxDom.scrollHeight', boxDom.scrollHeight)
+    // console.log(document.body.clientHeight);
+  })
+</script>
+</body>
+</html>
