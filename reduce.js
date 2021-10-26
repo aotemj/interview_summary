@@ -29,3 +29,15 @@
   console.log(newArr);
 }
 
+{
+//  将多维数组转化为1维数组
+  let arr = [[1, 2, [1, 2, [1, 2, 3]]], [2, 3], [4, 5]];
+
+  function flatByReduce(arr) {
+    return arr.reduce((prev, curr) => {
+      return prev.concat(Array.isArray(curr) ? flatByReduce(curr) : curr)
+    }, [])
+  }
+
+  console.log(flatByReduce(arr));
+}
