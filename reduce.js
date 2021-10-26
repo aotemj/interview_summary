@@ -14,3 +14,18 @@
 
   console.log(obj);
 }
+
+{
+  // 数组去重
+  let arr = [1, 2, 1, 3, 1, 2, 3, 4]
+
+  let newArr = arr.reduce((prev, curr) => {
+    if (prev.indexOf(curr) === -1) {
+      prev.push(curr)
+    }
+    return prev
+  }, [])
+
+  console.log(newArr);
+}
+
