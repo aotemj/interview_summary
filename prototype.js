@@ -86,4 +86,5 @@
   console.log(child2.name);
   console.log(child1.getName());
   console.log(child1.gender);
+  console.log('=================== 组合式继承结束 ===================')
 }
