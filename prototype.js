@@ -27,4 +27,31 @@
   console.log(child2.name)
   console.log('=================== 原型链继承结束 ===================')
 }
+// 构造函数继承
+// 在子类的构造函数中执行父类的构造函数，并绑定子类的this
+// 缺点：无法继承父类 prototype 上的方法和属性
+{
+  function Parent(name) {
+    this.name = [name]
+  }
 
+  Parent.prototype.getName = function () {
+    return this.name;
+  }
+
+  Parent.prototype.gender = 'male'
+
+  function Child() {
+    Parent.call(this, ...arguments)
+  }
+
+  let child1 = new Child("name1")
+  let child2 = new Child("name2")
+
+  child1.name[0] = ["new Name"]
+  console.log(child1.name);
+  console.log(child2.name);
+  // console.log(child1.getName()); // child1.getName is not a function 无法继承父类 prototype 上的方法和属性
+  console.log(child1.gender); // undefined 无法继承父类 prototype 上的方法和属性
+  console.log('=================== 构造函数继承结束 ===================')
+}
