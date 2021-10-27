@@ -55,3 +55,35 @@
   console.log(child1.gender); // undefined 无法继承父类 prototype 上的方法和属性
   console.log('=================== 构造函数继承结束 ===================')
 }
+
+// 组合式继承
+// 使用原型继承和构造函数继承结合的方式实现
+// 缺点：每次继承的实现都必须依赖一个新的父类的实例
+{
+  function Parent(name) {
+    this.name = [name]
+  }
+
+  Parent.prototype.getName = function () {
+    return this.name
+  }
+  Parent.prototype.gender = 'gender'
+
+  function Child() {
+    Parent.call(this, ...arguments)
+  }
+
+  Child.prototype = new Parent() // 每次继承的实现都必须依赖一个新的父类的实例
+  Child.prototype.constructor = Child;
+
+
+  let child1 = new Child("name1")
+  let child2 = new Child("name2")
+
+  child1.name = "new Name"
+
+  console.log(child1.name);
+  console.log(child2.name);
+  console.log(child1.getName());
+  console.log(child1.gender);
+}
