@@ -76,3 +76,35 @@
     console.log(number);
   }
 }
+
+{
+  let obj = {
+    0: 100,
+    1: 200,
+    2: 300,
+    length: 3
+  }
+
+  obj[Symbol.iterator] = function () {
+    let self = this;
+    let index = 0
+    return {
+      next() {
+        if (index === self.length) {
+          return {
+            done: true,
+            value: undefined
+          }
+        }
+        return {
+          done: false,
+          value: self[index++]
+        }
+      }
+    }
+  }
+
+  for (const objElement of obj) {
+    console.log(objElement);
+  }
+}
