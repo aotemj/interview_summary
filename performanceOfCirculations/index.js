@@ -1,3 +1,11 @@
+// 循环性能总结
+// 第一梯队：every 0.x ms
+// 第二梯队：for、while 5.x ms
+// 第三梯队：forEach、some、reduce 120.x ms
+// 第四梯队：for of 146.x ms
+// 第五梯队：map 243.x ms
+// 第六梯队：for in  2.3 s
+
 function timeEstimate(fn, label) {
   console.time(label)
   fn()
@@ -56,3 +64,4 @@ timeEstimate(function () {
   },
   'for of'
 ) // browser: 137 ms  node: 146 ms
+
