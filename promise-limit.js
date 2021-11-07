@@ -1,24 +1,24 @@
 /**
+ * 方式一
  * 实现并发调用，最大并发数
  * @param urls 需要调用的url 信息
  * @param handler 处理函数
- * @param limit 并发数
+ * @param poolLimit 最大并发数
  */
-function limitLoad(urls, handler, limit) {
-  const copyUrls = Array.from(urls);
-  let promises = copyUrls.splice(0, limit).map((item, index) => {
+function limitLoad(urls, handler, poolLimit) {
+  const copyUrls = Array.from(urls)
+
+  const executingPromises = copyUrls.splice(0, poolLimit).map(item => {
     return handler(item)
   })
 
-  let p = Promise.race(promises);
-  let length = copyUrls.length
-  for (let i = 0; i < length; i++) {
-    p = p.then(res => {
-      promises[res] = handler(copyUrls[i]).then(() => {
-        return res
+  let p = Promise.race(executingPromises)
+  for (const copyUrl of copyUrls) {
+    p = p.then((index) => {
+      executingPromises[index] = handler(copyUrl).then(() => {
+        return index
       })
-
-      return Promise.race(promises)
+      return Promise.race(executingPromises)
     })
   }
 }
