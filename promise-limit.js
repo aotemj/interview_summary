@@ -23,6 +23,33 @@ function limitLoad(urls, handler, poolLimit) {
   }
 }
 
+// 方法二 通过递归在poolLimit 的限制下循环调用handler
+function limitLoad2(urls, handler, poolLimit) {
+  const copyUrls = Array.from(urls)
+  const executingList = new Array(poolLimit).fill(null)
+
+  let index = 0,
+    results = [],
+    length = copyUrls.length
+
+  for (const executing of executingList) {
+    function run() {
+      if (length <= index) {
+        return;
+      }
+      const oldIndex = index;
+      handler(copyUrls[index++]).then((res) => {
+        results[oldIndex] = res
+        run()
+      })
+    }
+
+    run()
+  }
+
+  return Promise.all(executingList).then(() => results)
+}
+
 const urls = [
   {
     info: 'xxx1',
@@ -137,4 +164,5 @@ function loadImg(url) {
   })
 }
 
-limitLoad(urls, loadImg, 3)
+// limitLoad(urls, loadImg, 3)
+limitLoad2(urls, loadImg, 3)
