@@ -26,12 +26,12 @@ let A = {
       {
         type: 'div', key: 'B1', props: {
           style, children: [
-            {
-              type: 'div',
-              key: 'C1', props: {
-                children: []
-              }
-            }
+            // {
+            //   type: 'div',
+            //   key: 'C1', props: {
+            //     children: []
+            //   }
+            // }
           ]
         }
       },
@@ -42,14 +42,9 @@ let A = {
 
 let workInProgress;
 
+const Placement = 'Placement';
 const TAG_ROOT = 'TAG_ROOT'; // Fiber 根节点
 const TAG_HOST = "TAG_HOST";// 原生DOM节点
-
-function workLoop() {
-  while (workInProgress) { // 如果有任务就执行
-    workInProgress = performUnitOfWork(workInProgress); // 执行完成之后会返回下一个任务
-  }
-}
 
 let root = document.getElementById("root")
 
@@ -61,6 +56,12 @@ let rootFiber = {
   props: {children: [A]}
 }
 
+function workLoop() {
+  while (workInProgress) { // 如果有任务就执行
+    workInProgress = performUnitOfWork(workInProgress); // 执行完成之后会返回下一个任务
+  }
+  console.log(rootFiber)
+}
 
 function performUnitOfWork(workInProgress) {
   console.log('performUnitOfWork', workInProgress.key)
@@ -69,7 +70,7 @@ function performUnitOfWork(workInProgress) {
     return workInProgress.child
   }
   while (workInProgress) {
-    // completeUnitOfWork(workInProgress) // 完成执行单元
+    completeUnitOfWork(workInProgress) // 完成执行单元
     if (workInProgress.sibling) {
       return workInProgress.sibling
     }
@@ -85,6 +86,32 @@ function completeUnitOfWork(workInProgress) {
     case TAG_HOST:
       stateNode = createStateNode(workInProgress);
       break;
+  }
+  // 完成后开始构建Effect链表
+  makeEffectList(workInProgress)
+}
+
+function makeEffectList(completeWork) {
+  console.log(completeWork.key);
+  let returnFiber = completeWork.return;
+  if (returnFiber) {
+    if (!returnFiber.firstEffect) {
+      returnFiber.firstEffect = completeWork.firstEffect;
+    }
+    if (completeWork.lastEffect) {
+      if (returnFiber.lastEffect) {
+        returnFiber.lastEffect.nextEffect = completeWork.lastEffect
+      }
+      returnFiber.lastEffect = completeWork.lastEffect
+    }
+    if (completeWork.flag) {
+      if (returnFiber.lastEffect) {
+        returnFiber.lastEffect.nextEffect = completeWork
+      } else {
+        returnFiber.firstEffect = completeWork
+      }
+      returnFiber.lastEffect = completeWork
+    }
   }
 }
 
@@ -108,7 +135,7 @@ function reconcileChildren(returnFiber, nextChildren) {
   for (let i = 0; i < length; i++) {
     let newFiber = createFiber(nextChildren[i])
     newFiber.return = returnFiber
-
+    newFiber.flag = Placement;
     if (!firstChildFiber) {
       firstChildFiber = newFiber
     } else {
