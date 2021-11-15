@@ -60,7 +60,8 @@ function workLoop() {
   while (workInProgress) { // 如果有任务就执行
     workInProgress = performUnitOfWork(workInProgress); // 执行完成之后会返回下一个任务
   }
-  console.log(rootFiber)
+  // console.log(rootFiber)
+  commitRoot(rootFiber)
 }
 
 function performUnitOfWork(workInProgress) {
@@ -89,6 +90,24 @@ function completeUnitOfWork(workInProgress) {
   }
   // 完成后开始构建Effect链表
   makeEffectList(workInProgress)
+}
+
+function commitRoot(rootFiber) {
+  console.log(rootFiber);
+  let currentEffect = rootFiber.firstEffect
+  while (currentEffect) {
+    let flag = currentEffect.flag;
+    switch (flag) {
+      case Placement:
+        commitPlacement(currentEffect)
+    }
+    currentEffect = currentEffect.nextEffect
+  }
+}
+
+function commitPlacement(currentEffect) {
+  let parent = currentEffect.return.stateNode;
+  parent.appendChild(currentEffect.stateNode)
 }
 
 function makeEffectList(completeWork) {
