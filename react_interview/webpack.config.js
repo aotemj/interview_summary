@@ -1,7 +1,7 @@
 const path = require('path')
 const htmlWebpackPlugin = require('html-webpack-plugin')
 module.exports = {
-  entry: path.join(__dirname, './src/main.js'),
+  entry: path.join(__dirname, './src/eventComposition.js'),
   devtool: 'source-map',
   output: {
     path: path.resolve(__dirname, 'dist'),
