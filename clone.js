@@ -23,6 +23,46 @@ function deepClone(obj) {
   return target
 }
 
+function deepClone2(obj, hash = new WeakMap()) {
+  if (obj === null) {
+    return obj
+  }
+
+  if (obj instanceof Date) {
+    return new Date(obj)
+  }
+
+  if (obj instanceof RegExp) {
+    return new RegExp(obj)
+  }
+  if (obj instanceof Error) {
+    return new Error(obj.message)
+  }
+
+  if (typeof obj !== 'object') {
+    return obj
+  }
+
+  if (hash.has(obj)) {
+    return hash.get(obj)
+  }
+
+  hash.set(obj, obj)
+
+  let newObj = Object.create(null)
+  const keys = Reflect.ownKeys(obj)
+  for (const key of keys) {
+    const val = obj[key]
+    if (typeof val === 'object') {
+      newObj[key] = deepClone2(val, hash)
+    } else {
+      newObj[key] = val
+    }
+  }
+
+  return newObj
+}
+
 let obj = {
   a: 1,
   b: {
@@ -32,7 +72,8 @@ let obj = {
   }
 }
 
-let cloneObj = shallowCopy(obj)
+
+let cloneObj = deepClone2(obj)
 cloneObj.a = 'a'
 cloneObj.b.a = 'b'
 cloneObj.b.c.a = 2
