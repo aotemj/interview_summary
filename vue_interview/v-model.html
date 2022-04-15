@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<div id="app">
+  <input type="text" id="input">
+
+  <p>
+    content: <span id="content"></span>
+  </p>
+</div>
+
+<script>
+  let obj = {}
+
+  Object.defineProperty(obj, 'value', {
+    get(val) {
+      console.log('get Value');
+    },
+    set(val) {
+      console.log('set value');
+      document.querySelector('#content').innerText = val;
+    }
+  })
+  document.querySelector("#input").addEventListener('input', (e) => {
+    obj.value = e.target.value;
+  })
+</script>
+</body>
+</html>
